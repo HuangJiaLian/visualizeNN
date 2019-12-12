@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\begin{document}
+\pagestyle{empty}
+
+\def\layersep{2.5cm}
+
+\tikzset{neuron/.style={circle,thick,fill=black!25,minimum size=17pt,inner sep=0pt},
+    input neuron/.style={neuron, draw,thick, fill=gray!30},
+    hidden neuron/.style={neuron,fill=white,draw},
+    hoz/.style={rotate=-90}}   %<--- for labels
+
+\begin{tikzpicture}[-,draw=black, node distance=\layersep,transform shape,rotate=90]  %<-- rotate the NN
+
+% Draw the input layer nodes
+\foreach \name / \y in {1/1,2/2,3/3,5/m}
+\node[input neuron, hoz] (I-\name) at (0,-\name) {\color{red}$b_\y$};
+
+\node[hoz] (I-4) at (0,-4) {$\dots$};
+
+\foreach \name / \y in {1/1,2/2,3/3,5/m}
+\path[hoz] (I-\name) node[below=0.5cm](0,-\name) {$v_\y$};
+
+% Draw the hidden layer nodes
+\foreach \name / \y in {1/1,2/2,3/3,6/n}
+\path[yshift=0.5cm] node [hidden neuron, hoz] (H-\name) at (\layersep,-\name cm) {\color{red}$c_\y$};
+
+\path[yshift=0.5cm]
+   node[hoz] () at (\layersep,-4 cm) {$\dots$};
+\path[yshift=0.5cm]
+   node[hoz] () at (\layersep,-5 cm) {$\dots$};
+
+\foreach \name / \y in {1/1,2/2,3/3,6/n}
+\path[hoz] (H-\name) node[above=0.5cm]  {$h_\y$};  
+
+\path node[hoz,right] at ($(I-5)!0.5!(H-6)$) {\color{red}$w_{nm}$};       
+
+% Connect every node in the input layer with every node in the  hidden layer.
+    \foreach \source in {1,2,3,5}
+        \foreach \dest in {1,2,3,6}
+            \path (I-\source.north) edge (H-\dest.south);
+\end{tikzpicture}
+% End of code
+\end{document}
